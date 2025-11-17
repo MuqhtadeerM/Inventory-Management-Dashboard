@@ -1,5 +1,7 @@
-import React from "react";
+import { useState } from "react";
+import { Search, Trash2 } from "lucide-react";
 
+// Reusable Button Component
 const Button = ({
   children,
   onClick,
@@ -12,11 +14,9 @@ const Button = ({
   fullWidth = false,
   loading = false,
 }) => {
-  // Base styles
   const baseStyles =
     "inline-flex items-center justify-center font-medium rounded-lg transition-all duration-200 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed";
 
-  // Size styles
   const sizeStyles = {
     xs: "px-2.5 py-1.5 text-xs gap-1",
     sm: "px-3 py-2 text-sm gap-1.5",
@@ -25,7 +25,6 @@ const Button = ({
     xl: "px-6 py-3.5 text-base gap-2.5",
   };
 
-  // Variant styles - using inline style for primary to force red color
   const getVariantStyles = () => {
     switch (variant) {
       case "primary":
@@ -33,7 +32,6 @@ const Button = ({
           className: "text-white shadow-sm",
           style: {
             backgroundColor: disabled ? "#9CA3AF" : "#E31E24",
-            ":hover": { backgroundColor: "#C41E1E" },
           },
         };
       case "secondary":
@@ -41,9 +39,20 @@ const Button = ({
           className: "bg-gray-600 hover:bg-gray-700 text-white shadow-sm",
           style: {},
         };
+      case "outline":
+        return {
+          className:
+            "bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 shadow-sm",
+          style: {},
+        };
       case "danger":
         return {
           className: "bg-red-600 hover:bg-red-700 text-white shadow-sm",
+          style: {},
+        };
+      case "ghost":
+        return {
+          className: "text-gray-600 hover:bg-gray-100 hover:text-gray-900",
           style: {},
         };
       default:
@@ -108,5 +117,4 @@ const Button = ({
     </button>
   );
 };
-
 export default Button;

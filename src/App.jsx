@@ -28,13 +28,20 @@ import PurchaseReport from "./pages/reports/PurchaseReport.jsx";
 import SalesReport from "./pages/reports/SalesReport.jsx";
 
 // Settings
-// import CompanySettings from "./pages/settings/CompanySettings.jsx";
+import CompanySettings from "./pages/settings/CompanySettings.jsx";
+
+// Context
+import { ExpenseProvider } from "./context/ExpenseContext";
 
 import {
   getUserFromStorage,
   saveUserToStorage,
   logoutUser,
 } from "./utils/authService";
+import { PaymentProvider } from "./context/PaymentContext.jsx";
+import { PurchaseProvider } from "./context/PurchaseContext.jsx";
+import { ReturnProvider } from "./context/ReturnContext.jsx";
+import { SalesProvider } from "./context/SalesContext.jsx";
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -53,17 +60,27 @@ const App = () => {
     return children;
   };
 
-  // Layout wrapper helper
+  // Layout wrapper helper with ExpenseProvider
   const LayoutWrapper = ({ children }) => (
-    <Layout
-      user={user}
-      onLogout={() => {
-        logoutUser();
-        setUser(null);
-      }}
-    >
-      {children}
-    </Layout>
+    <ExpenseProvider>
+      <PaymentProvider>
+        <PurchaseProvider>
+          <ReturnProvider>
+            <SalesProvider>
+              <Layout
+                user={user}
+                onLogout={() => {
+                  logoutUser();
+                  setUser(null);
+                }}
+              >
+                {children}
+              </Layout>
+            </SalesProvider>
+          </ReturnProvider>
+        </PurchaseProvider>
+      </PaymentProvider>
+    </ExpenseProvider>
   );
 
   return (
@@ -256,7 +273,7 @@ const App = () => {
           }
         />
 
-        {/* SETTINGS ROUTE
+        {/* SETTINGS ROUTE */}
         <Route
           path="/company-settings"
           element={
@@ -266,7 +283,7 @@ const App = () => {
               </LayoutWrapper>
             </ProtectedRoute>
           }
-        /> */}
+        />
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />

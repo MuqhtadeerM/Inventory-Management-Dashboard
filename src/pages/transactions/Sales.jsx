@@ -1,19 +1,10 @@
 import React from "react";
 import { Plus, Eye, Edit } from "lucide-react";
+import { useSales } from "../../context/SalesContext";
+import SalesForm from "../../components/forms/SalesForm"; // Your form component
 
 const Sales = ({ user }) => {
-  const sales = [
-    {
-      id: 1,
-      date: "11/12/2025",
-      outlet: "City Mart",
-      items: "2 item(s)",
-      total: "₹1,568",
-      paid: "₹1,568",
-      status: "paid",
-      user: "Manager User",
-    },
-  ];
+  const { sales, showSalesForm, setShowSalesForm, addSale } = useSales();
 
   return (
     <div className="p-6">
@@ -22,7 +13,10 @@ const Sales = ({ user }) => {
           <h1 className="text-2xl font-bold text-gray-900">Sales</h1>
           <p className="mt-1 text-gray-600">Manage sales transactions</p>
         </div>
-        <button className="bg-[#E31E24] text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-red-700 transition-colors">
+        <button
+          onClick={() => setShowSalesForm(true)}
+          className="bg-[#E31E24] text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-red-700 transition-colors"
+        >
           <Plus className="w-5 h-5" />
           Add Sale
         </button>
@@ -104,6 +98,11 @@ const Sales = ({ user }) => {
           </div>
         </div>
       </div>
+
+      {/* Sales Form Modal */}
+      {showSalesForm && (
+        <SalesForm onClose={() => setShowSalesForm(false)} onSave={addSale} />
+      )}
     </div>
   );
 };

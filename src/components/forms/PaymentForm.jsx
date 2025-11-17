@@ -1,27 +1,16 @@
 import React, { useState, useEffect } from "react";
+import { usePayments } from "../../context/PaymentContext";
 
-const EXPENSE_TYPES = [
-  "Transportation",
-  "Utilities",
-  "Office Supplies",
-  "Maintenance",
-  "Salaries",
-  "Marketing",
-  "Others",
-];
+const PAYMENT_METHODS = ["Cash", "Card", "UPI", "Bank Transfer", "Cheque"];
 
-const ExpenseForm = ({
-  isOpen,
-  onClose,
-  onSave,
-  initialData = null,
-  currentUser = null,
-}) => {
+const PaymentForm = ({ isOpen, onClose, onSave, initialData = null }) => {
+  const { sales } = usePayments();
   const [formData, setFormData] = useState({
     date: new Date().toISOString().split("T")[0],
-    type: "",
-    description: "",
+    saleId: "",
     amount: "",
+    method: "Cash",
+    reference: "",
   });
   const [errors, setErrors] = useState({});
 
@@ -30,16 +19,18 @@ const ExpenseForm = ({
       if (initialData) {
         setFormData({
           date: initialData.date,
-          type: initialData.type,
-          description: initialData.description,
+          saleId: initialData.saleId || "",
           amount: initialData.amount.toString(),
+          method: initialData.method,
+          reference: initialData.reference,
         });
       } else {
         setFormData({
           date: new Date().toISOString().split("T")[0],
-          type: "",
-          description: "",
+          saleId: "",
           amount: "",
+          method: "Cash",
+          reference: "",
         });
       }
       setErrors({});
@@ -67,16 +58,20 @@ const ExpenseForm = ({
       newErrors.date = "Date is required";
     }
 
-    if (!formData.type) {
-      newErrors.type = "Expense type is required";
+    if (!formData.saleId) {
+      newErrors.saleId = "Sale is required";
     }
 
     if (!formData.amount || parseFloat(formData.amount) <= 0) {
       newErrors.amount = "Valid amount is required";
     }
 
-    if (!formData.description.trim()) {
-      newErrors.description = "Description is required";
+    if (!formData.method) {
+      newErrors.method = "Payment method is required";
+    }
+
+    if (!formData.reference.trim()) {
+      newErrors.reference = "Reference number is required";
     }
 
     setErrors(newErrors);
@@ -90,26 +85,39 @@ const ExpenseForm = ({
       return;
     }
 
-    const expenseData = {
+    const selectedSale = sales.find((s) => s.id === parseInt(formData.saleId));
+
+    const paymentData = {
       ...formData,
       amount: parseFloat(formData.amount),
-      user: currentUser || "Admin User",
+      sale: selectedSale
+        ? `${selectedSale.outlet} - ${formatDate(selectedSale.date)}`
+        : "",
       id: initialData ? initialData.id : Date.now(),
     };
 
-    onSave(expenseData);
+    onSave(paymentData);
     onClose();
   };
 
   const handleCancel = () => {
     setFormData({
       date: new Date().toISOString().split("T")[0],
-      type: "",
-      description: "",
+      saleId: "",
       amount: "",
+      method: "Cash",
+      reference: "",
     });
     setErrors({});
     onClose();
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
   };
 
   if (!isOpen) return null;
@@ -121,10 +129,10 @@ const ExpenseForm = ({
         <div className="flex items-center justify-between px-6 py-5">
           <div>
             <h2 className="text-xl font-bold text-gray-800">
-              {initialData ? "Edit Expense" : "Add Expense"}
+              {initialData ? "Edit Payment" : "Add Payment"}
             </h2>
             <p className="mt-1 text-sm text-gray-600">
-              Fill in the expense details
+              Fill in the payment details
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -146,7 +154,7 @@ const ExpenseForm = ({
                 (e.currentTarget.style.backgroundColor = "#E31E24")
               }
             >
-              {initialData ? "Update Expense" : "Save Expense"}
+              {initialData ? "Update Payment" : "Save Payment"}
             </button>
           </div>
         </div>
@@ -158,7 +166,7 @@ const ExpenseForm = ({
           <form onSubmit={handleSubmit}>
             {/* Section Title */}
             <h3 className="mb-6 text-base font-semibold text-gray-800">
-              Expense Information
+              Payment Information
             </h3>
 
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -179,33 +187,34 @@ const ExpenseForm = ({
                 )}
               </div>
 
-              {/* Expense Type */}
+              {/* Sale */}
               <div>
                 <label className="block mb-2 text-sm font-medium text-gray-700">
-                  Expense Type
+                  Sale
                 </label>
                 <select
-                  name="type"
-                  value={formData.type}
+                  name="saleId"
+                  value={formData.saleId}
                   onChange={handleChange}
                   className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#E31E24] focus:border-transparent transition-colors"
                 >
-                  <option value="">Select expense type</option>
-                  {EXPENSE_TYPES.map((type) => (
-                    <option key={type} value={type}>
-                      {type}
+                  <option value="">Select sale</option>
+                  {sales.map((sale) => (
+                    <option key={sale.id} value={sale.id}>
+                      {sale.outlet} - {formatDate(sale.date)} (₹{sale.balance}{" "}
+                      pending)
                     </option>
                   ))}
                 </select>
-                {errors.type && (
-                  <p className="mt-1 text-xs text-red-600">{errors.type}</p>
+                {errors.saleId && (
+                  <p className="mt-1 text-xs text-red-600">{errors.saleId}</p>
                 )}
               </div>
 
-              {/* Amount */}
+              {/* Payment Amount */}
               <div>
                 <label className="block mb-2 text-sm font-medium text-gray-700">
-                  Amount
+                  Payment Amount
                 </label>
                 <input
                   type="number"
@@ -222,22 +231,44 @@ const ExpenseForm = ({
                 )}
               </div>
 
-              {/* Description - Full Width */}
+              {/* Payment Method */}
+              <div>
+                <label className="block mb-2 text-sm font-medium text-gray-700">
+                  Payment Method
+                </label>
+                <select
+                  name="method"
+                  value={formData.method}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#E31E24] focus:border-transparent transition-colors"
+                >
+                  {PAYMENT_METHODS.map((method) => (
+                    <option key={method} value={method}>
+                      {method}
+                    </option>
+                  ))}
+                </select>
+                {errors.method && (
+                  <p className="mt-1 text-xs text-red-600">{errors.method}</p>
+                )}
+              </div>
+
+              {/* Reference Number */}
               <div className="md:col-span-2">
                 <label className="block mb-2 text-sm font-medium text-gray-700">
-                  Description
+                  Reference Number
                 </label>
-                <textarea
-                  name="description"
-                  value={formData.description}
+                <input
+                  type="text"
+                  name="reference"
+                  value={formData.reference}
                   onChange={handleChange}
-                  placeholder="Enter expense description"
-                  rows="4"
-                  className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#E31E24] focus:border-transparent resize-none transition-colors"
+                  placeholder="Enter reference number"
+                  className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#E31E24] focus:border-transparent transition-colors"
                 />
-                {errors.description && (
+                {errors.reference && (
                   <p className="mt-1 text-xs text-red-600">
-                    {errors.description}
+                    {errors.reference}
                   </p>
                 )}
               </div>
@@ -249,4 +280,4 @@ const ExpenseForm = ({
   );
 };
 
-export default ExpenseForm;
+export default PaymentForm;
