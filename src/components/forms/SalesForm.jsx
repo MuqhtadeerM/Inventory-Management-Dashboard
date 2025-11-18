@@ -1,9 +1,9 @@
 import { useState } from "react";
 import Button from "../../components/common/Button";
 import SectionCard from "../../components/common/SectionCard";
-import Input from "../../components//common/Input";
+import Input from "../../components/common/Input";
 import { Search, Trash2 } from "lucide-react";
-import Select from "../common/Section";
+import Select from "../../components/common/Section";
 
 const SalesForm = ({ onClose, onSave }) => {
   const [saleData, setSaleData] = useState({

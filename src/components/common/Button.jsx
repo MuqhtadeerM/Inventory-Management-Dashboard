@@ -1,7 +1,3 @@
-import { useState } from "react";
-import { Search, Trash2 } from "lucide-react";
-
-// Reusable Button Component
 const Button = ({
   children,
   onClick,

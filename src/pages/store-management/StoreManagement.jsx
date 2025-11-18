@@ -1,141 +1,263 @@
-import React from "react";
-import { Store, MapPin, Phone, Mail, Edit, Clock, User } from "lucide-react";
+import React, { useState } from "react";
+import {
+  Store,
+  MapPin,
+  Phone,
+  Mail,
+  Edit,
+  Clock,
+  User,
+  X,
+  Trash2,
+} from "lucide-react";
 
-const StoreManagement = ({ user }) => {
-  const storeInfo = {
-    name: "Coca-Cola Distribution Center",
-    address: "123 Business Park, Andheri East, Mumbai, Maharashtra 400069",
-    phone: "+91 22 1234 5678",
-    email: "store@cocacola.in",
-    manager: "Rajesh Kumar",
-    openingHours: "9:00 AM - 6:00 PM",
-    warehouse: "Warehouse A - Building 5",
-    gstNumber: "27AABCU9603R1ZM",
-    panNumber: "AABCU9603R",
+const StoreManagement = () => {
+  const [stores, setStores] = useState([
+    {
+      id: 1,
+      code: "ST001",
+      name: "Main Warehouse",
+      address: "Andheri East, Mumbai",
+      contact: "9876543200",
+      manager: "Manager User",
+    },
+    {
+      id: 2,
+      code: "ST002",
+      name: "Regional Store",
+      address: "Mumbai West",
+      contact: "9876543201",
+      manager: "Manager User",
+    },
+  ]);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+
+  const [formData, setFormData] = useState({
+    id: null,
+    code: "",
+    name: "",
+    address: "",
+    contact: "",
+    manager: "",
+  });
+
+  // Open Add Modal
+  const openAddModal = () => {
+    setIsEditMode(false);
+    setFormData({
+      id: null,
+      code: "",
+      name: "",
+      address: "",
+      contact: "",
+      manager: "",
+    });
+    setIsModalOpen(true);
   };
+
+  // Open Edit Modal
+  const openEditModal = (store) => {
+    setIsEditMode(true);
+    setFormData(store);
+    setIsModalOpen(true);
+  };
+
+  // Save Store
+  const saveStore = () => {
+    if (isEditMode) {
+      setStores((prev) =>
+        prev.map((s) => (s.id === formData.id ? formData : s))
+      );
+    } else {
+      setStores((prev) => [...prev, { ...formData, id: Date.now() }]);
+    }
+    setIsModalOpen(false);
+  };
+
+  const deleteStore = (id) => {
+    if (window.confirm("Delete this store?")) {
+      setStores((prev) => prev.filter((s) => s.id !== id));
+    }
+  };
+
+  const handleChange = (e) =>
+    setFormData({ ...formData, [e.target.name]: e.target.value });
 
   return (
     <div className="p-6">
+      {/* HEADER */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Store Management</h1>
+          <h1 className="text-3xl font-bold text-gray-900">Store Management</h1>
           <p className="mt-1 text-gray-600">
-            Manage store information and settings
+            Manage multiple stores and warehouses
           </p>
         </div>
-        <button className="bg-[#E31E24] text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-red-700 transition-colors">
+        <button
+          onClick={openAddModal}
+          className="bg-[#E31E24] text-white px-5 py-2 rounded-lg flex items-center gap-2 hover:bg-red-700"
+        >
           <Edit className="w-5 h-5" />
-          Edit Store Info
+          Add Store
         </button>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        {/* Store Information Card */}
-        <div className="p-6 bg-white rounded-lg shadow">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 bg-[#E31E24] rounded-lg flex items-center justify-center">
-              <Store className="w-6 h-6 text-white" />
-            </div>
-            <h2 className="text-xl font-bold text-gray-900">
-              Store Information
-            </h2>
-          </div>
+      {/* STORE LIST TABLE */}
+      <div className="p-6 mb-8 bg-white shadow rounded-xl">
+        <h3 className="mb-4 text-xl font-bold">Store List</h3>
 
-          <div className="space-y-4">
-            <div>
-              <label className="text-sm font-semibold text-gray-600">
-                Store Name
-              </label>
-              <p className="mt-1 text-lg text-gray-900">{storeInfo.name}</p>
-            </div>
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-6 py-3 text-xs font-semibold text-left text-gray-500 uppercase">
+                  Store Code
+                </th>
+                <th className="px-6 py-3 text-xs font-semibold text-left text-gray-500 uppercase">
+                  Store Name
+                </th>
+                <th className="px-6 py-3 text-xs font-semibold text-left text-gray-500 uppercase">
+                  Address
+                </th>
+                <th className="px-6 py-3 text-xs font-semibold text-left text-gray-500 uppercase">
+                  Contact
+                </th>
+                <th className="px-6 py-3 text-xs font-semibold text-left text-gray-500 uppercase">
+                  Manager
+                </th>
+                <th className="px-6 py-3 text-xs font-semibold text-left text-gray-500 uppercase">
+                  Actions
+                </th>
+              </tr>
+            </thead>
 
-            <div>
-              <label className="flex items-center gap-2 text-sm font-semibold text-gray-600">
-                <MapPin className="w-4 h-4" />
-                Address
-              </label>
-              <p className="mt-1 text-gray-900">{storeInfo.address}</p>
-            </div>
+            <tbody className="divide-y divide-gray-200">
+              {stores.map((s) => (
+                <tr key={s.id} className="hover:bg-gray-50">
+                  <td className="px-6 py-4">{s.code}</td>
+                  <td className="px-6 py-4 font-semibold">{s.name}</td>
+                  <td className="px-6 py-4">{s.address}</td>
+                  <td className="px-6 py-4">{s.contact}</td>
+                  <td className="px-6 py-4">{s.manager}</td>
 
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              <div>
-                <label className="flex items-center gap-2 text-sm font-semibold text-gray-600">
-                  <Phone className="w-4 h-4" />
-                  Phone
-                </label>
-                <p className="mt-1 text-gray-900">{storeInfo.phone}</p>
-              </div>
+                  <td className="flex gap-3 px-6 py-4">
+                    <button
+                      onClick={() => openEditModal(s)}
+                      className="text-gray-600 hover:text-gray-900"
+                    >
+                      <Edit className="w-5 h-5" />
+                    </button>
 
-              <div>
-                <label className="flex items-center gap-2 text-sm font-semibold text-gray-600">
-                  <Mail className="w-4 h-4" />
-                  Email
-                </label>
-                <p className="mt-1 text-gray-900">{storeInfo.email}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Additional Details Card */}
-        <div className="p-6 bg-white rounded-lg shadow">
-          <h2 className="mb-6 text-xl font-bold text-gray-900">
-            Additional Details
-          </h2>
-
-          <div className="space-y-4">
-            <div>
-              <label className="flex items-center gap-2 text-sm font-semibold text-gray-600">
-                <User className="w-4 h-4" />
-                Store Manager
-              </label>
-              <p className="mt-1 text-gray-900">{storeInfo.manager}</p>
-            </div>
-
-            <div>
-              <label className="flex items-center gap-2 text-sm font-semibold text-gray-600">
-                <Clock className="w-4 h-4" />
-                Opening Hours
-              </label>
-              <p className="mt-1 text-gray-900">{storeInfo.openingHours}</p>
-            </div>
-
-            <div>
-              <label className="text-sm font-semibold text-gray-600">
-                Warehouse Location
-              </label>
-              <p className="mt-1 text-gray-900">{storeInfo.warehouse}</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Tax Information Card */}
-        <div className="p-6 bg-white rounded-lg shadow lg:col-span-2">
-          <h2 className="mb-6 text-xl font-bold text-gray-900">
-            Tax Information
-          </h2>
-
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <div>
-              <label className="text-sm font-semibold text-gray-600">
-                GST Number
-              </label>
-              <p className="mt-1 font-mono text-lg text-gray-900">
-                {storeInfo.gstNumber}
-              </p>
-            </div>
-
-            <div>
-              <label className="text-sm font-semibold text-gray-600">
-                PAN Number
-              </label>
-              <p className="mt-1 font-mono text-lg text-gray-900">
-                {storeInfo.panNumber}
-              </p>
-            </div>
-          </div>
+                    <button
+                      onClick={() => deleteStore(s.id)}
+                      className="text-red-600 hover:text-red-900"
+                    >
+                      <Trash2 className="w-5 h-5" />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
+
+      {/* ------------------ MODAL ------------------ */}
+      {isModalOpen && (
+        <>
+          <div className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm"></div>
+
+          <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+            <div className="w-full max-w-3xl p-8 bg-white shadow-2xl rounded-xl">
+              {/* Header */}
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-semibold">
+                  {isEditMode ? "Edit Store" : "Add Store"}
+                </h2>
+                <button onClick={() => setIsModalOpen(false)}>
+                  <X className="w-6 h-6 text-gray-600 hover:text-gray-900" />
+                </button>
+              </div>
+
+              {/* FORM */}
+              <div className="grid grid-cols-2 gap-6">
+                <div>
+                  <label className="text-sm font-medium">Store Code</label>
+                  <input
+                    name="code"
+                    placeholder="e.g. ST001"
+                    value={formData.code}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 mt-1 border rounded-lg bg-gray-50"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium">Store Name</label>
+                  <input
+                    name="name"
+                    placeholder="Enter store name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 mt-1 border rounded-lg bg-gray-50"
+                  />
+                </div>
+
+                <div className="col-span-2">
+                  <label className="text-sm font-medium">Address</label>
+                  <input
+                    name="address"
+                    placeholder="Enter store address"
+                    value={formData.address}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 mt-1 border rounded-lg bg-gray-50"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium">Contact Number</label>
+                  <input
+                    name="contact"
+                    placeholder="Enter contact number"
+                    value={formData.contact}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 mt-1 border rounded-lg bg-gray-50"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium">Manager Name</label>
+                  <input
+                    name="manager"
+                    placeholder="Enter manager name"
+                    value={formData.manager}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 mt-1 border rounded-lg bg-gray-50"
+                  />
+                </div>
+              </div>
+
+              {/* BUTTONS */}
+              <div className="flex justify-end gap-3 mt-8">
+                <button
+                  onClick={() => setIsModalOpen(false)}
+                  className="px-5 py-2 border rounded-lg hover:bg-gray-100"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={saveStore}
+                  className="px-6 py-2 text-white bg-red-600 rounded-lg hover:bg-red-700"
+                >
+                  Save
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };

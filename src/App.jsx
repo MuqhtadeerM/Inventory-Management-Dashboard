@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import Login from "./pages/auth/Login.jsx";
 import Layout from "./components/layout/Layout.jsx";
-import Dashboard from "./pages/dashboard/Dashboard.jsx";
 
 // Transaction Pages
 import Purchases from "./pages/transactions/Purchases.jsx";
@@ -42,6 +41,9 @@ import { PaymentProvider } from "./context/PaymentContext.jsx";
 import { PurchaseProvider } from "./context/PurchaseContext.jsx";
 import { ReturnProvider } from "./context/ReturnContext.jsx";
 import { SalesProvider } from "./context/SalesContext.jsx";
+
+// Admin Dashboard
+import AdminDashboard from "./pages/Admin/AdminDashboard.jsx";
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -105,13 +107,11 @@ const App = () => {
 
         {/* DASHBOARD PAGE */}
         <Route
-          path="/"
+          path="/admin-dashboard"
           element={
-            <ProtectedRoute>
-              <LayoutWrapper>
-                <Dashboard user={user} />
-              </LayoutWrapper>
-            </ProtectedRoute>
+            <LayoutWrapper>
+              <AdminDashboard user={user} />
+            </LayoutWrapper>
           }
         />
 

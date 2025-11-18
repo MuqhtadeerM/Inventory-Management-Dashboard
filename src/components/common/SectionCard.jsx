@@ -11,7 +11,6 @@ const SectionCard = ({
   return (
     <div className="overflow-hidden bg-white border border-gray-200 rounded-lg shadow-sm">
       <div className="p-6">
-        {/* Only render the icon section if Icon is provided */}
         {Icon && (
           <div className="flex items-center gap-3 mb-6">
             <div
@@ -28,9 +27,11 @@ const SectionCard = ({
           </div>
         )}
 
-        {/* If no icon, just show title */}
+        {/* Title spacing fix */}
         {!Icon && title && (
-          <div className="mb-6">
+          <div className="mb-4">
+            {" "}
+            {/* << ONLY CHANGE DONE */}
             <h3 className="text-lg font-bold text-gray-900">{title}</h3>
             {description && (
               <p className="mt-1 text-sm text-gray-600">{description}</p>
