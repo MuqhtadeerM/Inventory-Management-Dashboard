@@ -9,7 +9,7 @@ import DashboardCard from "../../components/dashboard/DashboardCard";
 import RecentSales from "../../components/dashboard/RecentSales";
 import LowStockProducts from "../../components/dashboard/LowStockProducts";
 
-const Dashboard = () => {
+const AdminDashboard = () => {
   const statsCards = [
     {
       title: "Total Sales",
@@ -79,4 +79,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default AdminDashboard;

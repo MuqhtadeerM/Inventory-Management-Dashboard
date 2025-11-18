@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import Login from "./pages/auth/Login.jsx";
 import Layout from "./components/layout/Layout.jsx";
-import Dashboard from "./pages/dashboard/Dashboard.jsx";
 
 // Transaction Pages
 import Purchases from "./pages/transactions/Purchases.jsx";
@@ -43,6 +42,11 @@ import { PurchaseProvider } from "./context/PurchaseContext.jsx";
 import { ReturnProvider } from "./context/ReturnContext.jsx";
 import { SalesProvider } from "./context/SalesContext.jsx";
 
+// Dashboards
+import AdminDashboard from "./pages/Admin/AdminDashboard.jsx";
+import ManagerDashboard from "./pages/Manager/ManagerDashboard.jsx";
+import UserDashboard from "./pages/User/UserDashboard.jsx";
+
 const App = () => {
   const [user, setUser] = useState(null);
 
@@ -60,7 +64,7 @@ const App = () => {
     return children;
   };
 
-  // Layout wrapper helper with ExpenseProvider
+  // Layout wrapper with providers
   const LayoutWrapper = ({ children }) => (
     <ExpenseProvider>
       <PaymentProvider>
@@ -83,6 +87,13 @@ const App = () => {
     </ExpenseProvider>
   );
 
+  // ROLE-BASED redirect logic
+  const redirectByRole = (role) => {
+    if (role === "Admin") return "/admin-dashboard";
+    if (role === "Manager") return "/manager-dashboard";
+    return "/dashboard"; // Normal users
+  };
+
   return (
     <BrowserRouter>
       <Routes>
@@ -91,7 +102,7 @@ const App = () => {
           path="/login"
           element={
             user ? (
-              <Navigate to="/" replace />
+              <Navigate to={redirectByRole(user.role)} replace />
             ) : (
               <Login
                 onLogin={(u) => {
@@ -103,13 +114,37 @@ const App = () => {
           }
         />
 
-        {/* DASHBOARD PAGE */}
+        {/* ADMIN DASHBOARD */}
         <Route
-          path="/"
+          path="/admin-dashboard"
           element={
             <ProtectedRoute>
               <LayoutWrapper>
-                <Dashboard user={user} />
+                <AdminDashboard user={user} />
+              </LayoutWrapper>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* MANAGER DASHBOARD */}
+        <Route
+          path="/manager-dashboard"
+          element={
+            <ProtectedRoute>
+              <LayoutWrapper>
+                <ManagerDashboard user={user} />
+              </LayoutWrapper>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* USER DASHBOARD */}
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <LayoutWrapper>
+                <UserDashboard user={user} />
               </LayoutWrapper>
             </ProtectedRoute>
           }
@@ -171,7 +206,7 @@ const App = () => {
           }
         />
 
-        {/* MASTER DATA ROUTES */}
+        {/* MASTER DATA */}
         <Route
           path="/products"
           element={
@@ -227,7 +262,7 @@ const App = () => {
           }
         />
 
-        {/* STORE MANAGEMENT ROUTE */}
+        {/* STORE MANAGEMENT */}
         <Route
           path="/store-management"
           element={
@@ -239,7 +274,7 @@ const App = () => {
           }
         />
 
-        {/* REPORTS ROUTES */}
+        {/* REPORTS */}
         <Route
           path="/stock-report"
           element={
@@ -273,7 +308,7 @@ const App = () => {
           }
         />
 
-        {/* SETTINGS ROUTE */}
+        {/* SETTINGS */}
         <Route
           path="/company-settings"
           element={
@@ -286,7 +321,10 @@ const App = () => {
         />
 
         {/* Fallback */}
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route
+          path="*"
+          element={<Navigate to={redirectByRole(user?.role)} replace />}
+        />
       </Routes>
     </BrowserRouter>
   );
