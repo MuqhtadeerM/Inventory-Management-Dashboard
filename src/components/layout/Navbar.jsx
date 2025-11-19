@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Menu, User, LogOut, ChevronDown, Store } from "lucide-react";
 
 const Navbar = ({ isSidebarOpen, setIsSidebarOpen, onLogout, user }) => {

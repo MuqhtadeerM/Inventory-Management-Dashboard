@@ -1,3 +1,5 @@
+import React from "react";
+import { DollarSign, TrendingUp } from "lucide-react";
 import StatCard from "../../components/common/StatCard";
 
 const UserDashboard = ({ user }) => {
@@ -38,23 +40,25 @@ const UserDashboard = ({ user }) => {
       <div>
         <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
         <p className="mt-1 text-gray-600">
-          Welcome back, {user?.username || "Sales User"}!
+          Welcome back, {user?.username || "User"}!
         </p>
       </div>
 
-      {/* Stats Grid */}
+      {/* Stats Grid - Only 2 cards for User */}
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <StatCard
           title="Total Sales"
           value={`₹${dashboardData.totalSales.toLocaleString()}`}
+          icon={DollarSign}
           iconBg="bg-green-100"
-          textColor="text-green-600"
+          iconColor="text-green-600"
         />
         <StatCard
           title="Pending Payments"
           value={dashboardData.pendingPayments}
+          icon={TrendingUp}
           iconBg="bg-orange-100"
-          textColor="text-orange-600"
+          iconColor="text-orange-600"
         />
       </div>
 

@@ -1,6 +1,4 @@
-
-
-const StatCard = ({ title, value, iconBg, textColor }) => (
+const StatCard = ({ title, value, iconBg }) => (
   <div className="p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
     <div className="flex items-center justify-between">
       <div>
