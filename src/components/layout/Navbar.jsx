@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 import { Menu, User, LogOut, ChevronDown, Store } from "lucide-react";
 
-const Navbar = ({ isSidebarOpen, setIsSidebarOpen, onLogout }) => {
+const Navbar = ({ isSidebarOpen, setIsSidebarOpen, onLogout, user }) => {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+
+  // Get user display information
+  const displayName = user?.username || "User";
+  const displayRole = user?.role || "User";
 
   return (
     <header className="h-16 bg-[#E31E24] text-white fixed top-0 left-0 right-0 z-50 shadow-lg">
@@ -38,8 +42,8 @@ const Navbar = ({ isSidebarOpen, setIsSidebarOpen, onLogout }) => {
           >
             <User className="w-5 h-5" />
             <div className="hidden text-left sm:block">
-              <div className="text-sm font-semibold">Admin User</div>
-              <div className="text-xs opacity-90">Admin</div>
+              <div className="text-sm font-semibold">{displayName}</div>
+              <div className="text-xs opacity-90">{displayRole}</div>
             </div>
             <ChevronDown
               className={`w-4 h-4 transition-transform ${
@@ -58,9 +62,9 @@ const Navbar = ({ isSidebarOpen, setIsSidebarOpen, onLogout }) => {
               <div className="absolute right-0 z-50 w-56 py-2 mt-2 bg-white border border-gray-200 rounded-lg shadow-xl">
                 <div className="px-4 py-3 border-b border-gray-200">
                   <div className="text-sm font-semibold text-gray-900">
-                    Admin User
+                    {displayName}
                   </div>
-                  <div className="text-xs text-gray-500">Admin</div>
+                  <div className="text-xs text-gray-500">{displayRole}</div>
                 </div>
                 <button
                   onClick={onLogout}

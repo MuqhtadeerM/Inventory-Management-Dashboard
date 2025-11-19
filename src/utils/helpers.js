@@ -97,9 +97,9 @@ export const getInitials = (name) => {
  */
 export const canAccess = (userRole, requiredRole) => {
   const roleHierarchy = {
-    admin: 3,
-    manager: 2,
-    user: 1,
+    Admin: 3,
+    Manager: 2,
+    User: 1,
   };
 
   return roleHierarchy[userRole] >= roleHierarchy[requiredRole];
