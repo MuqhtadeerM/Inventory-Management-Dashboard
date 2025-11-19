@@ -1,16 +1,129 @@
-# React + Vite
+# Coca Cola Inventory Management System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a **Role-Based Inventory Management System** designed for Coca-Cola, featuring a modern frontend built with React. The application supports three distinct user roles — **Admin**, **Manager**, and **Sales User** — each with tailored access controls and features.
+  
+## Table of Contents
 
-Currently, two official plugins are available:
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Getting Started](#getting-started)
+- [Available Scripts](#available-scripts)
+- [Project Structure](#project-structure)
+- [Roles & Permissions](#roles--permissions)
+- [Contributing](#contributing)
+- [License](#license)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Role-Based Authentication & Authorization**:  
+  - Admin: Manages users, inventory, access controls.
+  - Manager: Oversees inventory, generates reports.
+  - Sales User: Views inventory, creates sales orders.
+- **Inventory Tracking**: Add, update, and manage product inventory.
+- **Responsive & Modern UI**: Built with TailwindCSS for mobile-friendly operation.
+- **Context-based State Management**: Centralized state for user sessions and inventory.
+- **Navigation**: Intuitive routing across modules with React Router.
+- **Developer Tooling**:  
+  - Prettier for code formatting  
+  - Husky for git hooks (pre-commit/pre-push to enforce code style)
+  
+## Tech Stack
 
-## Expanding the ESLint configuration
+- **React**  
+- **Context API**
+- **React Router**
+- **TailwindCSS**
+- **JavaScript (ES6+)**
+- **Prettier**  
+- **Husky**
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## Getting Started
+
+### Prerequisites
+
+Be sure you have the following installed:
+- [Node.js](https://nodejs.org/) (v14 or higher)
+- [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
+
+### Installation
+
+1. **Clone the repo**
+   ```bash
+   git clone https://github.com/your-username/coca-cola-inventory.git
+   cd coca-cola-inventory
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
+
+3. **Start the development server**
+   ```bash
+   npm start
+   ```
+
+   The app should now be running at `http://localhost:3000`
+
+---
+
+## Available Scripts
+
+- `start` — Start development server
+- `build` — Production build
+- `test` — Run tests
+- `lint` — Lint JS files
+- `format` — Format code with Prettier
+
+Husky hooks automatically lint and format the code before each commit.
+
+---
+
+## Project Structure
+
+```
+src/
+  ├─ components/
+  ├─ contexts/
+  ├─ pages/
+  ├─ routes/
+  ├─ utils/
+  ├─ App.js
+  ├─ index.js
+  └─ ...
+```
+
+---
+
+## Roles & Permissions
+
+| Role        | Inventory Management | User Management | Report Generation | Sales Orders |
+|-------------|:-------------------:|:--------------:|:----------------:|:------------:|
+| Admin       | ✅                  | ✅             | ✅               | ✅            |
+| Manager     | ✅                  | ❌             | ✅               | ❌           |
+| Sales User  | View Only           | ❌             | ❌               | ✅           |
+
+Access is managed via React Context and checked at route level using React Router.
+
+---
+
+## Contributing
+
+Pull requests are welcome!  
+Ensure code is formatted and passes all lint checks — Husky and Prettier will run automatically.
+
+---
+
+## License
+
+[MIT](LICENSE)
+
+---
+
+**Made with ❤️ by MuqhtadeerM**
