@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
 
-const Layout = ({ children, onLogout }) => {
+const Layout = ({ children, onLogout, user }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true); // Default true for desktop
 
   return (
@@ -11,8 +11,13 @@ const Layout = ({ children, onLogout }) => {
         isSidebarOpen={isSidebarOpen}
         setIsSidebarOpen={setIsSidebarOpen}
         onLogout={onLogout}
+        user={user}
       />
-      <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
+      <Sidebar
+        isOpen={isSidebarOpen}
+        setIsOpen={setIsSidebarOpen}
+        user={user}
+      />
       <main
         className={`pt-16 transition-all duration-300 ${
           isSidebarOpen ? "lg:ml-64" : "lg:ml-0"

@@ -1,7 +1,7 @@
 // Demo users database
 export const DEMO_USERS = [
   {
-    username: "admin",
+    username: "Admin",
     password: "admin123",
     name: "Admin User",
     role: "Admin",
@@ -9,7 +9,7 @@ export const DEMO_USERS = [
     permissions: ["all"],
   },
   {
-    username: "manager",
+    username: "Manager",
     password: "manager123",
     name: "Manager User",
     role: "Manager",
@@ -26,7 +26,7 @@ export const DEMO_USERS = [
     ],
   },
   {
-    username: "user",
+    username: "User",
     password: "user123",
     name: "Sales User",
     role: "User",
