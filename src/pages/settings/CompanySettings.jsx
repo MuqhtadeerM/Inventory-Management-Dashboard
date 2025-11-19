@@ -5,7 +5,7 @@ import Textarea from "../../components/common/Textarea";
 import SectionCard from "../../components/common/SectionCard";
 import InfoAlert from "../../components/common/InfoAlert";
 
-const CompanySettings = ({ user }) => {
+const CompanySettings = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     companyName: "Coca-Cola Distribution",
